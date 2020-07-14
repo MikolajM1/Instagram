@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/light_green"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProfileFragment">
+
+    <ImageView
+        android:id="@+id/profile_imageView2"
+        android:layout_width="371dp"
+        android:layout_height="121dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@color/light_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_button1" />
+
+    <Button
+        android:id="@+id/profile_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="LIKE"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView2" />
+
+    <Button
+        android:id="@+id/profile_button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SHOW DESCRIPTION"
+        app:layout_constraintEnd_toStartOf="@+id/profile_button3"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toEndOf="@+id/profile_button2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView2" />
+
+    <Button
+        android:id="@+id/profile_button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="COMMENT"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView2" />
+
+    <ImageView
+        android:id="@+id/profile_imageView1"
+        android:layout_width="142dp"
+        android:layout_height="105dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/account"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_textView1"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="4dp"
+        android:text="Profile"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/profile_button1"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="FOLLOW"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView1" />
+
+    <Button
+        android:id="@+id/profile_button5"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:text="SHOW BIO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView1" />
+
+    <TextView
+        android:id="@+id/profile_textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Followers: "
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_imageView1"
+        app:layout_constraintTop_toBottomOf="@+id/profile_textView1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

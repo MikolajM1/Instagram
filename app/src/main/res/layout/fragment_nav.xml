@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".navFragment">
+
+    <ImageView
+        android:id="@+id/nimageView"
+        android:layout_width="100dp"
+        android:layout_height="72dp"
+        android:src="@drawable/home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/nimageView2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/nimageView2"
+        android:layout_width="100dp"
+        android:layout_height="72dp"
+        android:src="@drawable/search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/nimageView3"
+        app:layout_constraintStart_toEndOf="@+id/nimageView" />
+
+    <ImageView
+        android:id="@+id/nimageView3"
+        android:layout_width="100dp"
+        android:layout_height="72dp"
+        android:src="@drawable/upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/nimageView4"
+        app:layout_constraintStart_toEndOf="@+id/nimageView2" />
+
+    <ImageView
+        android:id="@+id/nimageView4"
+        android:layout_width="100dp"
+        android:layout_height="72dp"
+        android:src="@drawable/account"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/nimageView3" />
+</androidx.constraintlayout.widget.ConstraintLayout>
