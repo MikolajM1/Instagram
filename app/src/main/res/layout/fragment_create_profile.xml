@@ -16,6 +16,7 @@
         android:ems="10"
         android:hint="Profile description"
         android:inputType="textPersonName"
+        android:text="Profile Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

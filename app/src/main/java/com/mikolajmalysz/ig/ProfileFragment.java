@@ -42,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -298,13 +299,18 @@ public class ProfileFragment extends Fragment {
                         Map<String, Object> readMap = new HashMap<>(document.getData());
                         profileName = readMap.get("displayname").toString();
                         textView1.setText(profileName);
-                        profilePicId = readMap.get("profile_picture").toString();
+                        if (readMap.get("profile_picture") != null){
+                            profilePicId = readMap.get("profile_picture").toString();
+                        }
                         followersNumber = "Followers: " + readMap.get("followersNum").toString();
                         textView2.setText(followersNumber);
                         profileDesc = readMap.get("profileDesc").toString();
                         posts = (ArrayList) readMap.get("posts");
-                        Log.i("profilePicID", profilePicId);
-                        loadProfilePicture();
+                        if (profilePicId != null){
+                            loadProfilePicture();
+                        }else{
+                            Toast.makeText(getContext(), "No profile picture found", Toast.LENGTH_SHORT).show();
+                        }
                         if (posts.size() == 0){
                             Toast.makeText(getContext(), "This profile does not contain any posts", Toast.LENGTH_SHORT).show();
                             button2.setVisibility(View.INVISIBLE);
