@@ -265,7 +265,7 @@ public class ProfileFragment extends Fragment {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         postReadMap = new HashMap<>(document.getData());
                         postDesc = postReadMap.get("description").toString();
-                        likes = Long.valueOf(postReadMap.get("likes").toString());
+                        likes = Long.parseLong(postReadMap.get("likes").toString());
                         getComments();
                         button2.setText("LIKE" + " (" + likes + ")");
                     } else {
@@ -531,6 +531,7 @@ public class ProfileFragment extends Fragment {
                         //Update user's arrayList to contain new image's ID
                         Map<String, Object> readMap = new HashMap<>(document.getData());
                         likedBy = (ArrayList) readMap.get("likedBy");
+                        assert likedBy != null;
                         if (likedBy.contains(user.getUid())){
                             button2Text = "UNLIKE";
                             liked = true;

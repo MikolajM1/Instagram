@@ -86,17 +86,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reditText3" />
 
-    <EditText
-        android:id="@+id/reditText5"
+    <Button
+        android:id="@+id/rbutton3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="Data of Birth (dd/MM/yyyy)"
-        android:inputType="date"
+        android:layout_marginEnd="8dp"
+        android:text="Pick Date of birth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reditText4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

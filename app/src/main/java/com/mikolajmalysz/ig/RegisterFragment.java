@@ -1,7 +1,10 @@
 package com.mikolajmalysz.ig;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -36,24 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RegisterFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RegisterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RegisterFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private Button button1;
     private Button button2;
@@ -61,14 +48,16 @@ public class RegisterFragment extends Fragment {
     private EditText editText2;
     private EditText editText3;
     private EditText editText4;
-    private EditText editText5;
+    private Button button3;
 
-
-    public static final int PICK_IMAGE = 1;
 
     private FirebaseAuth mAuth;
     FirebaseFirestore db;
     FirebaseUser user;
+
+    String birthdate;
+
+    private DatePickerDialog.OnDateSetListener dataDialogListener;
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,31 +65,9 @@ public class RegisterFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RegisterFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -125,13 +92,7 @@ public class RegisterFragment extends Fragment {
         editText2 = v.findViewById(R.id.reditText2); //E-mail
         editText3 = v.findViewById(R.id.reditText3); //Password
         editText4 = v.findViewById(R.id.reditText4); //Confirm password
-        editText5 = v.findViewById(R.id.reditText5); //Date of birth
-
-//        if (displayName()){
-//            register();
-//        }else{
-//            Toast.makeText(getContext(), "Display name is already in use", Toast.LENGTH_SHORT).show();
-//        }
+        button3 = v.findViewById(R.id.rbutton3);  //Date of birth
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +106,21 @@ public class RegisterFragment extends Fragment {
                 }else{
                     Toast.makeText(getContext(), "Passwords are different", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), LoginHolderActivity.class);
+                startActivity(i);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDate();
             }
         });
 
@@ -162,7 +138,7 @@ public class RegisterFragment extends Fragment {
                             user = mAuth.getCurrentUser();
                             Map<String, Object> writeMap = new HashMap<>();
                             writeMap.put("displayname", editText.getText().toString());
-                            writeMap.put("birth", editText5.getText().toString());
+                            writeMap.put("birth", birthdate);
                             writeMap.put("followed", new ArrayList<>());
                             Log.i("writeMap", "done");
                             db.collection("users").document(user.getUid()).set(writeMap);
@@ -221,9 +197,10 @@ public class RegisterFragment extends Fragment {
         SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy");
         Date d1 = new Date();
         try {
-            d1 = sdformat.parse(editText5.getText().toString());
+            d1 = sdformat.parse(birthdate);
         }catch (Exception e){
             Log.i("dates exception", e.toString());
+            Toast.makeText(getContext(), "Please provide a birth date", Toast.LENGTH_SHORT).show();
         }
 
         Calendar c = Calendar.getInstance();
@@ -236,6 +213,24 @@ public class RegisterFragment extends Fragment {
             Toast.makeText(getContext(), "Date is less than 13 years old", Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    private void loadDate(){
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        dataDialogListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                birthdate = day + "/" + month + "/" + year;
+                Log.d("onDate", birthdate);
+            }
+        };
+        DatePickerDialog dialog = new DatePickerDialog(getContext(), android.R.style.Theme_DeviceDefault_DayNight, dataDialogListener, year, month, day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        dialog.show();
     }
 
     public void sendEmailVerification(){
@@ -260,12 +255,6 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {

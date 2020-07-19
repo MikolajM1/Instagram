@@ -4,70 +4,41 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link navFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link navFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.HashMap;
+import java.util.Map;
+
 public class navFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private ImageView button1;
     private ImageView button2;
     private ImageView button3;
     private ImageView button4;
 
-    private OnFragmentInteractionListener mListener;
-
     public navFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment navFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static navFragment newInstance(String param1, String param2) {
-        navFragment fragment = new navFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -80,6 +51,10 @@ public class navFragment extends Fragment {
         button2 = v.findViewById(R.id.nimageView2);
         button3 = v.findViewById(R.id.nimageView3);
         button4 = v.findViewById(R.id.nimageView4);
+
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
 
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,9 +77,31 @@ public class navFragment extends Fragment {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.add(R.id.frameLayout, new UploadFragment()).replace(R.id.frameLayout, new UploadFragment()).addToBackStack(null).commit();
+                db.collection("users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Log.d("read user doc", "DocumentSnapshot data: " + document.getData());
+                                Map<String, Object> readMap = new HashMap<>(document.getData());
+                                if (readMap.containsKey("profileDesc")){
+                                    FragmentManager manager = getFragmentManager();
+                                    FragmentTransaction transaction = manager.beginTransaction();
+                                    transaction.add(R.id.frameLayout, new UploadFragment()).replace(R.id.frameLayout, new UploadFragment()).addToBackStack(null).commit();
+                                }else{
+                                    FragmentManager manager = getFragmentManager();
+                                    FragmentTransaction transaction = manager.beginTransaction();
+                                    transaction.add(R.id.frameLayout, new NoProfileFragment()).replace(R.id.frameLayout, new NoProfileFragment()).addToBackStack(null).commit();
+                                }
+                            } else {
+                                Log.d("read user doc", "No such document");
+                            }
+                        } else {
+                            Log.d("read user doc", "get failed with ", task.getException());
+                        }
+                    }
+                });
             }
         });
 
@@ -120,15 +117,6 @@ public class navFragment extends Fragment {
         return v;
     }
 
-
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -137,7 +125,7 @@ public class navFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        OnFragmentInteractionListener mListener = null;
     }
 
     /**

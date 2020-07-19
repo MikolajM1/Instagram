@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.IpSecManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -44,34 +43,15 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.security.AlgorithmParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private Button button1;
     private Button button2;
@@ -110,30 +90,11 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (savedInstanceState == null){
+            Toast.makeText(getContext(), "Swipe left to show next post, right to show previous", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -151,7 +112,6 @@ public class HomeFragment extends Fragment {
         button2 = v.findViewById(R.id.home_button2); //desc
         button3 = v.findViewById(R.id.home_button3); //comments
 
-        Toast.makeText(getContext(), "Swipe left to show next post, right to show previous", Toast.LENGTH_SHORT).show();
 
         buttonSignOut = v.findViewById(R.id.sign_out_button);
 
@@ -195,10 +155,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSwipeLeft() {
                 super.onSwipeLeft();
-                Log.i("post", String.valueOf(post));
                 if (post < posts.size() - 1){
                     post++;
-                    Log.i("postIf", String.valueOf(post));
                     loadImage();
                 }else{
                     loadRandom();
@@ -207,9 +165,8 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void run() {
                             posts = removeDuplicates(posts);
-                            post++;
-                            Log.i("postElse", String.valueOf(post));
-                            if (post < posts.size()){
+                            if (post < posts.size() - 1){
+                                post++;
                                 loadImage();
                             }else{
                                 Toast.makeText(getContext(), "You have reached the last item", Toast.LENGTH_SHORT).show();
@@ -592,12 +549,6 @@ public class HomeFragment extends Fragment {
         Log.i("posts's size", String.valueOf(posts.size()));
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -610,16 +561,6 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

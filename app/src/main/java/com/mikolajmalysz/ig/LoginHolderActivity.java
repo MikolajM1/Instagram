@@ -36,11 +36,10 @@ public class LoginHolderActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        FirebaseAuth.getInstance().signOut(); //Temporary TODO Remove
-//        if (currentUser != null){
-//            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//            startActivity(i);
-//        }else{
+        if (currentUser != null){
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+        }else{
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             LoginFragment loginFragment = new LoginFragment();
@@ -51,6 +50,6 @@ public class LoginHolderActivity extends AppCompatActivity {
                 loginFragment.setArguments(b);
             }
             transaction.add(R.id.loginFrameLayout, loginFragment).addToBackStack(null).commit();
-//        }
+        }
     }
 }

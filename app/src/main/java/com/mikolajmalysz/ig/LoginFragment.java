@@ -197,17 +197,17 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Login", "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
                             if (user.isEmailVerified()){
                                 Intent i = new Intent(getContext(), MainActivity.class);
                                 startActivity(i);
                             }else{
-                                Toast.makeText(getContext(), "Your email is not verified", LENGTH_SHORT).show();
+                                hideKeyboard(getActivity());
                                 ChocoBar.builder().setActivity(getActivity()).setActionText("Verify")
                                         .setActionClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-
+                                                sendEmailVerification(user);
                                             }
                                         })
                                         .setText("Your email address is not verified.")
@@ -255,6 +255,22 @@ public class LoginFragment extends Fragment {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 0);
+    }
+
+    public void sendEmailVerification(FirebaseUser user){
+        if (user != null){
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("email verification", "Email verification sent.");
+                                mAuth.signOut();
+                                Toast.makeText(getContext(), "We've sent a verification link to this email address. Please sign in when you verified your email.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        }
     }
 
     @Override
